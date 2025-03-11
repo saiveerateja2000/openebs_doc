@@ -27,13 +27,13 @@ helm install openebs openebs/openebs -n openebs
 
 ## **2️⃣ Creating a Custom Storage Class for Airflow DAGs**
 
-We create a **StorageClass** named `airflow_ebs`, which OpenEBS will manage.
+We create a **StorageClass** named `airflow-ebs`, which OpenEBS will manage.
 
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: airflow_ebs
+  name: airflow-ebs
 provisioner: openebs.io/local
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
@@ -66,7 +66,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: airflow_ebs
+  storageClassName: airflow-ebs
   hostPath:
     path: "/ubuntu/svt/airflow/dags"  # DAGs location on host
 ```
@@ -79,7 +79,7 @@ kubectl apply -f pv-dags.yaml
 
 ### **Q: How does OpenEBS recognize this Persistent Volume?**
 
-- The **StorageClassName** (`airflow_ebs`) links the PV to OpenEBS.
+- The **StorageClassName** (`airflow-ebs`) links the PV to OpenEBS.
 - OpenEBS **automatically discovers** and provisions storage when a PersistentVolumeClaim (PVC) requests it.
 
 ---
@@ -96,7 +96,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: airflow_ebs
+  storageClassName: airflow-ebs
   resources:
     requests:
       storage: 5Gi
